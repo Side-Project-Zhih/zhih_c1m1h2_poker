@@ -63,17 +63,6 @@ abstract class Player {
     this._cards.splice(index, 1);
   }
 
-  public checkCardBeUsed(targetCard: Card): boolean {
-    let isBeUsed = true;
-    for (const card of this._cards) {
-      if (targetCard.getWeightPoint() === card.getWeightPoint()) {
-        isBeUsed = false;
-        break;
-      }
-    }
-    return isBeUsed;
-  }
-
   public isExchangeCardBeUsed() {
     if (this._exchangeHand) {
       if (this._exchangeHand.getRound === 3) {
