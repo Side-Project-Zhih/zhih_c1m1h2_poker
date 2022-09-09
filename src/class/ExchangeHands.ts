@@ -4,7 +4,7 @@ import Card from "./Card";
 class ExchangeHands {
   private _roundCount = 1;
   constructor(private _player1: Player, private _player2: Player) {
-    this.exchangeCard();
+    this.exchangeHands();
   }
 
   public addRound() {
@@ -15,7 +15,7 @@ class ExchangeHands {
     return this._roundCount;
   }
 
-  private exchangeCard() {
+  private exchangeHands() {
     const player1Cards = this._player1.getCards;
     const player2Cards = this._player2.getCards;
     this._player1.setCards(
