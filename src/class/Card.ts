@@ -7,14 +7,21 @@ class Card {
   private _player?: Player;
   constructor(private rank: Rank, private suit: Suit) {}
 
-  getCardInfo() {
+  get getPlayer() {
+    return this._player;
+  }
+
+  get getRank() {
+    return this.rank;
+  }
+  get getSuit() {
+    return this.suit;
+  }
+
+  public getCardInfo() {
     const rank = this.rank.getValue;
     const suit = this.suit.getValue;
     return `Card : suit=> ${suit} rank=> ${rank}`;
-  }
-
-  get getPlayer() {
-    return this._player;
   }
 
   public setOwner(player: Player) {
@@ -33,13 +40,6 @@ class Card {
     const myCardPoint = this.getWeightPoint();
     const rivalCardPoint = rivalCard.getWeightPoint();
     return myCardPoint > rivalCardPoint ? this : rivalCard;
-  }
-
-  get getRank() {
-    return this.rank;
-  }
-  get getSuit() {
-    return this.suit;
   }
 }
 

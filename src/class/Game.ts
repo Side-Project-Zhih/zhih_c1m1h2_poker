@@ -13,6 +13,80 @@ class Game {
   private _round = 1;
   constructor() {}
 
+  public getFinalWinner() {
+    if (this._round < ROUND_LIMIT) {
+      console.log("WINNER have not been decided because game is not over ");
+      return;
+    }
+    const players = this._players;
+    const winnerMap: {
+      [prop: number]: Player[];
+    } = {};
+    let maxPoint = 0;
+
+    for (const player of players) {
+      const point = player.getPoint;
+      if (point >= maxPoint) {
+        maxPoint = point;
+        if (!winnerMap[point]) {
+          winnerMap[point] = [player];
+        } else {
+          winnerMap[point].push(player);
+        }
+      }
+    }
+
+    const winners = winnerMap[maxPoint];
+    const winnersName = winners.map((winner) => winner.getName).join(", ");
+    const winnerMessage = `FINAL WINNER IS ${winnersName}, GET ${maxPoint} points`;
+
+    console.log("++++++++++++++++++ WINNER ++++++++++++++++++");
+    console.log(winnerMessage);
+    console.log("++++++++++++++++++ WINNER ++++++++++++++++++");
+  }
+
+  public async init() {
+    console.log("GAME START");
+    await this.setPlayers();
+    console.log("SUFFLE DECK");
+    this.shuffleDeck();
+    console.log("EACH PLAYER DRAW 13 CARDS");
+    this.drawCard();
+  }
+
+  public async takeATurn() {
+    const players = this._players;
+    const showCards: Card[] = [];
+
+    for (const gamePlayer of players) {
+      if (!gamePlayer.isExchangeCardBeUsed()) {
+        const targetPlayers = players.filter(
+          (player) => player.getName !== gamePlayer.getName
+        );
+
+        await gamePlayer.useExchangeHands(targetPlayers);
+      }
+    }
+
+    for (const gamePlayer of players) {
+      const card = await gamePlayer.showCard();
+      showCards.push(card);
+    }
+
+    console.log(`================ ROUND ${this._round} ================ \n`);
+
+    const winner = this.showDown(showCards);
+    const winnerMessage = `ROUND ${this._round}  WINNER is ${winner.getName}`;
+    winner.addPoint();
+
+    console.log("\n-------------------------------");
+    console.log(winnerMessage);
+    console.log("-------------------------------\n");
+    console.log(`========================================== \n`);
+
+    this.addRoundCount();
+  }
+
   private addRoundCount() {
     ++this._round;
   }
@@ -88,80 +162,6 @@ class Game {
 
     const winner = maxCard.getPlayer as Player;
     return winner;
-  }
-
-  public getFinalWinner() {
-    if (this._round < ROUND_LIMIT) {
-      console.log("WINNER have not been decided because game is not over ");
-      return;
-    }
-    const players = this._players;
-    const winnerMap: {
-      [prop: number]: Player[];
-    } = {};
-    let maxPoint = 0;
-
-    for (const player of players) {
-      const point = player.getPoint;
-      if (point >= maxPoint) {
-        maxPoint = point;
-        if (!winnerMap[point]) {
-          winnerMap[point] = [player];
-        } else {
-          winnerMap[point].push(player);
-        }
-      }
-    }
-
-    const winners = winnerMap[maxPoint];
-    const winnersName = winners.map((winner) => winner.getName).join(", ");
-    const winnerMessage = `FINAL WINNER IS ${winnersName}, GET ${maxPoint} points`;
-
-    console.log("++++++++++++++++++ WINNER ++++++++++++++++++");
-    console.log(winnerMessage);
-    console.log("++++++++++++++++++ WINNER ++++++++++++++++++");
-  }
-
-  public async init() {
-    console.log("GAME START");
-    await this.setPlayers();
-    console.log("SUFFLE DECK");
-    this.shuffleDeck();
-    console.log("EACH PLAYER DRAW 13 CARDS");
-    this.drawCard();
-  }
-
-  public async takeATurn() {
-    const players = this._players;
-    const showCards: Card[] = [];
-
-    for (const gamePlayer of players) {
-      if (!gamePlayer.isExchangeCardBeUsed()) {
-        const targetPlayers = players.filter(
-          (player) => player.getName !== gamePlayer.getName
-        );
-
-        await gamePlayer.useExchangeHands(targetPlayers);
-      }
-    }
-
-    for (const gamePlayer of players) {
-      const card = await gamePlayer.showCard();
-      showCards.push(card);
-    }
-
-    console.log(`================ ROUND ${this._round} ================ \n`);
-
-    const winner = this.showDown(showCards);
-    const winnerMessage = `ROUND ${this._round}  WINNER is ${winner.getName}`;
-    winner.addPoint();
-
-    console.log("\n-------------------------------");
-    console.log(winnerMessage);
-    console.log("-------------------------------\n");
-    console.log(`========================================== \n`);
-
-    this.addRoundCount();
   }
 }
 

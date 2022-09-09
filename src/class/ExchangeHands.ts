@@ -7,15 +7,18 @@ class ExchangeHands {
     this.exchangeHands();
   }
 
-  public addRound() {
-    ++this._roundCount;
-  }
-
   get getRound() {
     return this._roundCount;
   }
 
-  private exchangeHands() {
+  public addRound() {
+    ++this._roundCount;
+  }
+
+  public returnCard() {
+    if (this._roundCount !== 3) {
+      return;
+    }
     const player1Cards = this._player1.getCards;
     const player2Cards = this._player2.getCards;
     this._player1.setCards(
@@ -32,11 +35,8 @@ class ExchangeHands {
       })
     );
   }
-
-  public returnCard() {
-    if (this._roundCount !== 3) {
-      return;
-    }
+  
+  private exchangeHands() {
     const player1Cards = this._player1.getCards;
     const player2Cards = this._player2.getCards;
     this._player1.setCards(
